@@ -29,7 +29,7 @@ jobs:
         run: |
           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            .\MSBuild.exe $Env:GITHUB_WORKSPACE\XIVLauncher.sln /t:Build /p:Configuration=ReleaseNoUpdate
-      - name: Compress build
+      - name: Compress Artifact
         run: |
           Compress-Archive -Path bin\* -DestinationPath release-$env:BRANCH.zip
       - name: Create Release
@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: release-$env:BRANCH.zip
+          files: release-*.zip
           name: Release ${{ github.ref }}
       - name: Upload artifact
         uses: actions/upload-artifact@master
