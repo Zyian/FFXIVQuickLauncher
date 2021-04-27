@@ -29,7 +29,8 @@ jobs:
         run: |
           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            .\MSBuild.exe $Env:GITHUB_WORKSPACE\XIVLauncher.sln /t:Build /p:Configuration=ReleaseNoUpdate
-      - name: Create Release
+      - name: Build Squirrel Release
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           $baseuri = 'https://github.com/goatcorp/FFXIVQuickLauncher/releases/latest/download' 
           $refver = $env:GITHUB_REF -replace '.*/'
