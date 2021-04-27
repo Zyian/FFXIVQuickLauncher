@@ -42,10 +42,9 @@ jobs:
           Invoke-WebRequest -Uri $baseuri/XIVLauncher-$ver-delta.nupkg -OutFile .\Releases\XIVLauncher-$ver-delta.nupkg
           Invoke-WebRequest -Uri $baseuri/XIVLauncher-$ver-full.nupkg -OutFile .\Releases\XIVLauncher-$ver-full.nupkg
           Invoke-WebRequest -Uri $baseuri/Setup.exe -OutFile .\Releases\Setup.exe
-           ~\.nuget\packages\squirrel.windows\1.9.1\tools\Squirrel.exe --releasify .\XIVLauncher.$version.nupkg
-          Start-Sleep -s 15
-          rm .\Releases\XIVLauncher-$ver-delta.nupkg
-          rm .\Releases\XIVLauncher-$ver-full.nupkg
+           ~\.nuget\packages\squirrel.windows\1.9.1\tools\Squirrel.exe --no-msi --releasify .\XIVLauncher.$version.nupkg
+          Start-Sleep -s 30
+          ls Releases
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
