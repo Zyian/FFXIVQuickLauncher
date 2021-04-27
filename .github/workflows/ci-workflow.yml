@@ -29,16 +29,29 @@ jobs:
         run: |
           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            .\MSBuild.exe $Env:GITHUB_WORKSPACE\XIVLauncher.sln /t:Build /p:Configuration=ReleaseNoUpdate
-      - name: Compress Artifact
+      - name: Create Release
         run: |
-          Compress-Archive -Path bin\* -DestinationPath release-$env:BRANCH.zip
+          $baseuri = 'https://github.com/goatcorp/FFXIVQuickLauncher/releases/latest/download' 
+          $version = $env:GITHUB_REF -replace '.*/'
+          nuget pack .\XIVLauncher.nuspec -properties version=$version
+          mkdir Releases
+          Invoke-WebRequest -Uri $baseuri/RELEASES -OutFile .\Releases\RELEASES
+          $latest = Select-String -Path "Releases\RELEASES" -Pattern "XIVLauncher-(.*)-.*.nupkg" | Select-Object * -Last 1
+          $ver = $latest.Matches.groups[1].value
+          Invoke-WebRequest -Uri $baseuri/XIVLauncher-$ver-delta.nupkg -OutFile .\Releases\XIVLauncher-$ver-delta.nupkg
+          Invoke-WebRequest -Uri $baseuri/XIVLauncher-$ver-full.nupkg -OutFile .\Releases\XIVLauncher-$ver-full.nupkg
+          Invoke-WebRequest -Uri $baseuri/Setup.exe -OutFile .\Releases\Setup.exe
+          Squirrel.exe --releasify .\XIVLauncher.$version.nupkg
+          Start-Sleep -s 15
+          rm .\Releases\XIVLauncher-$ver-delta.nupkg
+          rm .\Releases\XIVLauncher-$ver-full.nupkg
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: release-*.zip
+          files: Releases\**
           name: Release ${{ github.ref }}
       - name: Upload artifact
         uses: actions/upload-artifact@master
