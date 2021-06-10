@@ -2,7 +2,7 @@ name: Upload Release to VirusTotal
 
 on:
   release:
-    types: [published]
+    types: [published, prereleased]
 
 jobs:
   virustotal:
@@ -12,6 +12,7 @@ jobs:
         name: VirusTotal Scan
         uses: crazy-max/ghaction-virustotal@a3f74cfd584b0658320aec5e94ab6a8d16dca05f
         with:
+          update_release_body: true
           vt_api_key: ${{ secrets.VT_API_KEY }}
           files: |
             .exe$
