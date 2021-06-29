@@ -10,7 +10,7 @@ XIVLauncher (abbreviated as XL) is a faster launcher for Final Fantasy XIV, with
   </a>
 </p>
 
-## Why?
+## Why? test
 
 The original FFXIV launcher is slow, tedious, kinda ugly and cannot save your password. This project aims to fix that and add some QoL features to the game that were not there before, such as:
 
